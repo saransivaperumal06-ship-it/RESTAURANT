@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BiteRush — Food Delivered Fast</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg">Item added to cart!</span>
+  </div>
+ 
+  <!-- NAV -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#home" class="logo" onclick="showPage('home')">
+        <span class="logo-icon">🔥</span>BiteRush
+      </a>
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="search-input" placeholder="Search restaurants or cuisines…" oninput="filterRestaurants()"/>
+      </div>
+      <div class="nav-actions">
+        <button class="cart-btn" onclick="showPage('cart')">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-badge" id="cart-badge">0</span>
+        </button>
+        <button class="nav-cta" onclick="showPage('home')">Home</button>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- ==================== HOME PAGE ==================== -->
+  <div id="page-home" class="page active">
+ 
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hero-bg-shapes">
+        <div class="shape s1"></div>
+        <div class="shape s2"></div>
+        <div class="shape s3"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge">⚡ 30-minute delivery</div>
+        <h1 class="hero-title">Order Your<br/><em>Favorite Food</em><br/>Anytime.</h1>
+        <p class="hero-sub">From your couch to your table — curated restaurants, real-time tracking, zero hassle.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="document.getElementById('restaurants').scrollIntoView({behavior:'smooth'})">
+            Explore Restaurants <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div><strong>500+</strong><span>Restaurants</span></div>
+          <div><strong>4.8★</strong><span>Avg Rating</span></div>
+          <div><strong>12 min</strong><span>Avg Delivery</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="food-orbit">
+          <div class="food-emoji e1">🍕</div>
+          <div class="food-emoji e2">🍔</div>
+          <div class="food-emoji e3">🍜</div>
+          <div class="food-emoji e4">🌮</div>
+          <div class="food-emoji e5">🍣</div>
+          <div class="food-emoji e6">🍦</div>
+          <div class="food-center">🛵</div>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- CATEGORY FILTERS -->
+    <section class="categories-section">
+      <div class="container">
+        <h2 class="section-title">What are you craving?</h2>
+        <div class="category-pills" id="category-pills">
+          <button class="pill active" data-cat="All" onclick="filterByCategory('All',this)">🍽️ All</button>
+          <button class="pill" data-cat="Veg" onclick="filterByCategory('Veg',this)">🥦 Veg</button>
+          <button class="pill" data-cat="Non-Veg" onclick="filterByCategory('Non-Veg',this)">🍗 Non-Veg</button>
+          <button class="pill" data-cat="Fast Food" onclick="filterByCategory('Fast Food',this)">🍔 Fast Food</button>
+          <button class="pill" data-cat="Pizza" onclick="filterByCategory('Pizza',this)">🍕 Pizza</button>
+          <button class="pill" data-cat="Chinese" onclick="filterByCategory('Chinese',this)">🍜 Chinese</button>
+          <button class="pill" data-cat="Desserts" onclick="filterByCategory('Desserts',this)">🍨 Desserts</button>
+          <button class="pill" data-cat="Sushi" onclick="filterByCategory('Sushi',this)">🍣 Sushi</button>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- RESTAURANTS -->
+    <section class="restaurants-section" id="restaurants">
+      <div class="container">
+        <h2 class="section-title">Top Restaurants Near You</h2>
+        <div class="restaurant-grid" id="restaurant-grid">
+          <!-- Injected by JS -->
+        </div>
+        <p class="no-results hidden" id="no-results">No restaurants found. Try a different search.</p>
+      </div>
+    </section>
+ 
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="logo">🔥 BiteRush</span>
+        <p>© 2025 BiteRush. Delivering happiness, one order at a time.</p>
+      </div>
+    </footer>
+  </div>
+ 
+  <!-- ==================== MENU PAGE ==================== -->
+  <div id="page-menu" class="page">
+    <div class="menu-header" id="menu-header">
+      <button class="back-btn" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Back</button>
+      <div class="menu-restaurant-info" id="menu-restaurant-info"></div>
+    </div>
+    <div class="container">
+      <div class="menu-grid" id="menu-grid"></div>
+    </div>
+  </div>
+ 
+  <!-- ==================== CART PAGE ==================== -->
+  <div id="page-cart" class="page">
+    <div class="container">
+      <div class="page-header">
+        <button class="back-btn" onclick="showPage('home')"><i class="fa-solid fa-arrow-left"></i> Continue Shopping</button>
+        <h2>Your Cart <span class="cart-count-label" id="cart-count-label"></span></h2>
+      </div>
+      <div class="cart-layout">
+        <div class="cart-items-wrap" id="cart-items-wrap">
+          <!-- Injected by JS -->
+        </div>
+        <div class="cart-summary" id="cart-summary">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+      <div class="cart-empty hidden" id="cart-empty">
+        <div class="empty-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Add some delicious items to get started!</p>
+        <button class="btn-primary" onclick="showPage('home')">Browse Restaurants</button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ==================== CHECKOUT PAGE ==================== -->
+  <div id="page-checkout" class="page">
+    <div class="container">
+      <div class="page-header">
+        <button class="back-btn" onclick="showPage('cart')"><i class="fa-solid fa-arrow-left"></i> Back to Cart</button>
+        <h2>Checkout</h2>
+      </div>
+      <div class="checkout-layout">
+        <div class="checkout-form-wrap">
+          <h3>Delivery Details</h3>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="co-name" placeholder="John Doe"/>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="co-phone" placeholder="+65 9123 4567"/>
+          </div>
+          <div class="form-group">
+            <label>Delivery Address</label>
+            <textarea id="co-address" placeholder="Block 12, Orchard Road, Singapore 238823" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <div class="payment-options">
+              <label class="pay-opt active"><input type="radio" name="pay" value="card" checked/> 💳 Card</label>
+              <label class="pay-opt"><input type="radio" name="pay" value="cash"/> 💵 Cash on Delivery</label>
+              <label class="pay-opt"><input type="radio" name="pay" value="wallet"/> 📱 Wallet</label>
+            </div>
+          </div>
+          <button class="btn-primary full-width" onclick="placeOrder()">
+            Place Order <i class="fa-solid fa-fire"></i>
+          </button>
+        </div>
+        <div class="checkout-summary" id="checkout-summary">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ==================== CONFIRMATION PAGE ==================== -->
+  <div id="page-confirm" class="page">
+    <div class="confirm-wrap">
+      <div class="confirm-anim">✅</div>
+      <h2>Order Placed!</h2>
+      <p>Your food is being prepared with love 🍳</p>
+      <div class="order-id-box">
+        Order ID: <strong id="order-id-display"></strong>
+      </div>
+      <div class="delivery-eta">
+        <i class="fa-solid fa-clock"></i> Estimated delivery: <strong>25–35 minutes</strong>
+      </div>
+      <div class="confirm-steps">
+        <div class="step active"><i class="fa-solid fa-check"></i> Order Confirmed</div>
+        <div class="step-line"></div>
+        <div class="step"><i class="fa-solid fa-fire-burner"></i> Preparing</div>
+        <div class="step-line"></div>
+        <div class="step"><i class="fa-solid fa-motorcycle"></i> On the Way</div>
+        <div class="step-line"></div>
+        <div class="step"><i class="fa-solid fa-house"></i> Delivered</div>
+      </div>
+      <button class="btn-primary" onclick="resetAndGoHome()">Order Again 🔥</button>
+    </div>
+  </div>
+ 
+  <script src="script.js"></script>
+</body>
+</html>
